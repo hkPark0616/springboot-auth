@@ -1,6 +1,6 @@
 package com.ssafy.springbootauth.util;
 
-import com.ssafy.springbootauth.entitiy.EmailSecretEntity;
+import com.ssafy.springbootauth.entity.EmailSecretEntity;
 import com.ssafy.springbootauth.repository.EmailSecretRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

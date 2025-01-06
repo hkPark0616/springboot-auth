@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: springboot-auth
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ssafy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 30000
+server:
+  port: 8080
+
+jwt:
+  secret: qkrgornauthxptmxmvmfhwprxm #박해구auth테스트프로젝트
+
+find-password:
+  algorithm: AES
+  key: qkrgornauthxptmxmvmfhwprxm #박해구auth테스트프로젝트

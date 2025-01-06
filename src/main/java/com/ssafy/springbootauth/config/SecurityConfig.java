@@ -1,5 +1,7 @@
 package com.ssafy.springbootauth.config;
 
+import com.ssafy.springbootauth.repository.RefreshTokenRepository;
+import com.ssafy.springbootauth.repository.UserRepository;
 import com.ssafy.springbootauth.util.CookieUtil;
 import com.ssafy.springbootauth.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,9 +25,9 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-//    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 //    private final PreAuthorizeExceptionHandler preAuthorizeExceptionHandler;
-//    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 //    private final JWTService jwtService;
     private final JWTUtil jwtUtil;
     private final CookieUtil cookieUtil;
@@ -34,9 +36,9 @@ public class SecurityConfig {
 
     public SecurityConfig(
             AuthenticationConfiguration authenticationConfiguration,
-//            RefreshTokenRepository refreshTokenRepository,
+            RefreshTokenRepository refreshTokenRepository,
 //            PreAuthorizeExceptionHandler preAuthorizeExceptionHandler,
-//            UserMapper userMapper,
+            UserRepository userRepository,
 //            JWTService jwtService,
             JWTUtil jwtUtil,
             CookieUtil cookieUtil
@@ -44,9 +46,9 @@ public class SecurityConfig {
     ) {
 
         this.authenticationConfiguration = authenticationConfiguration;
-//        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
 //        this.preAuthorizeExceptionHandler = preAuthorizeExceptionHandler;
-//        this.userMapper = userMapper;
+        this.userRepository = userRepository;
 //        this.jwtService = jwtService;
         this.jwtUtil = jwtUtil;
         this.cookieUtil = cookieUtil;

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: springboot-auth
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ssafy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: ssafy
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 30000
+server:
+  port: 8080
+
+jwt:
+  secret: qkrgornauthxptmxmvmfhwprxm #?????????????

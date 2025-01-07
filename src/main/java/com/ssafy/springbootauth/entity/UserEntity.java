@@ -18,16 +18,16 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본 키 자동 생성 (MySQL AUTO_INCREMENT)
     private Long userSeq; // 기본 키
 
-    @Column(nullable = false, unique = true) // NOT NULL, UNIQUE 제약 조건
+    @Column(nullable = true, unique = true) // NOT NULL, UNIQUE 제약 조건
     private String userId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userPw;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String userEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userName;
 
     @Column(nullable = true)
@@ -36,7 +36,7 @@ public class UserEntity {
     @Column(nullable = true)
     private String socialPlatform;
 
-    @Column(nullable = false, updatable = false) // 최초 생성 시 값 설정, 수정 불가
+    @Column(nullable = true, updatable = false) // 최초 생성 시 값 설정, 수정 불가
     private LocalDateTime createdAt;
 
     @Version

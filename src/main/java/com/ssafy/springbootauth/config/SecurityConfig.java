@@ -2,10 +2,13 @@ package com.ssafy.springbootauth.config;
 
 import com.ssafy.springbootauth.filter.CustomLoginFilter;
 import com.ssafy.springbootauth.filter.CustomLogoutFilter;
+import com.ssafy.springbootauth.filter.JWTFilter;
 import com.ssafy.springbootauth.handler.CustomOAuth2SuccessHandler;
 import com.ssafy.springbootauth.handler.PreAuthorizeExceptionHandler;
+import com.ssafy.springbootauth.repository.CustomAuthorizationRequestRepository;
 import com.ssafy.springbootauth.repository.RefreshTokenRepository;
 import com.ssafy.springbootauth.repository.UserRepository;
+import com.ssafy.springbootauth.service.CustomOAuth2UserService;
 import com.ssafy.springbootauth.service.CustomUserDetailsService;
 import com.ssafy.springbootauth.service.JWTService;
 import com.ssafy.springbootauth.util.CookieUtil;
@@ -114,9 +117,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-//            CustomOAuth2UserService customOAuth2UserService,
-            CustomOAuth2SuccessHandler customOAuth2SuccessHandler
-//            CustomAuthorizationRequestRepository customAuthorizationRequestRepository
+            CustomOAuth2UserService customOAuth2UserService,
+            CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+            CustomAuthorizationRequestRepository customAuthorizationRequestRepository
     ) throws Exception {
 
         /**
@@ -127,8 +130,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable); // 사용자 요청 위조 (Cross Site Request Forgery)
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
+
         /**
-         * 메서드 접근 불가시 종류에 따라서 custom bean에 따라 로직 수행
+         * 메서드 접근 불가시 종류에 따라서 custom bean에 따라 Exception 로직 수행
          */
         http.exceptionHandling((exceptionHandling) -> exceptionHandling
                 .accessDeniedHandler(preAuthorizeExceptionHandler.customAccessDeniedHandler())
@@ -136,14 +140,14 @@ public class SecurityConfig {
         );
 
         /**
-         * cors권한 허용
+         * cors 권한 허용
          */
         http.cors((cors) -> cors
                 .configurationSource(this::corsConfiguration)
         );
 
         /**
-         * 로그인 filter custom
+         * custom login filter
          */
         CustomLoginFilter customLoginFilter = new CustomLoginFilter(
                 authenticationManager(authenticationConfiguration),
@@ -156,7 +160,7 @@ public class SecurityConfig {
         http.addFilterAt(customLoginFilter, UsernamePasswordAuthenticationFilter.class);
 
         /**
-         * 로그아웃 filter custom
+         * custom logout filter
          */
         CustomLogoutFilter customLogoutFilter = new CustomLogoutFilter(
                 refreshTokenRepository,
@@ -166,26 +170,26 @@ public class SecurityConfig {
         http.addFilterBefore(customLogoutFilter, LogoutFilter.class);
 
         /**
-         * JWT가 유효한지 인증을 거치는 filter추가
+         * JWT 가 유효한지 인증을 거치는 filter
          */
-//        JWTFilter jwtFilter = new JWTFilter(jwtUtil, userMapper, userDetailsService);
-//        http.addFilterBefore(jwtFilter, CustomLoginFilter.class);
+        JWTFilter jwtFilter = new JWTFilter(jwtUtil, userRepository, userDetailsService);
+        http.addFilterBefore(jwtFilter, CustomLoginFilter.class);
 
 
         /**
          * OAtuh2 관련 설정
          */
-//        http.oauth2Login((oauth2) -> oauth2
-//                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-//                        .userService(customOAuth2UserService))
-//                .successHandler(customOAuth2SuccessHandler)
-//                .authorizationEndpoint(endpoint -> endpoint
-//                        .authorizationRequestRepository(customAuthorizationRequestRepository)
-//                        .baseUri("/oauth2/authorization"))
-//        );
+        http.oauth2Login((oauth2) -> oauth2
+                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOAuth2UserService))
+                .successHandler(customOAuth2SuccessHandler)
+                .authorizationEndpoint(endpoint -> endpoint
+                        .authorizationRequestRepository(customAuthorizationRequestRepository)
+                        .baseUri("/oauth2/authorization"))
+        );
 
         /**
-         * JWT를 사용하면서 세션을 통한 로그인을 하지 않으므로 세션의 생성을 하지 않도록 설정
+         * JWT 를 사용하면서 세션을 통한 로그인을 하지 않으므로 세션의 생성을 하지 않도록 설정
          */
         http.sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

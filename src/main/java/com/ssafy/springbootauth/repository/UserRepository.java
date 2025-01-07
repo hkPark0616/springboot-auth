@@ -2,6 +2,10 @@ package com.ssafy.springbootauth.repository;
 
 import com.ssafy.springbootauth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -49,6 +53,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Override
     UserEntity save(UserEntity userEntity);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE UserEntity u SET u.userEmail = :email WHERE u.userSeq = :userSeq")
+    void updateUserEmail(@Param("userSeq") Long userSeq, @Param("email") String email);
+
+
     void deleteById(Long userSeq);
+
 }
 

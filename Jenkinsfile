@@ -18,10 +18,21 @@ pipeline {
     }
 
     stage('Deploy') {
-      steps {
-        echo 'Deploying...'
-        sleep 5
-        echo 'Deploy complete!'
+      parallel {
+        stage('Deploy') {
+          steps {
+            echo 'Deploying...'
+            sleep 5
+            echo 'Deploy complete!'
+          }
+        }
+
+        stage('') {
+          steps {
+            echo 'kk'
+          }
+        }
+
       }
     }
 

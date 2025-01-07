@@ -21,12 +21,12 @@ public class SecretUtil {
     @Value("${find-password.key}")
     private String KEY;
 
-    private final EmailSecretRepository emailSecretRepository;
-
-    public SecretUtil(EmailSecretRepository emailSecretRepository) {
-
-        this.emailSecretRepository = emailSecretRepository;
-    }
+//    private final EmailSecretRepository emailSecretRepository;
+//
+//    public SecretUtil(EmailSecretRepository emailSecretRepository) {
+//
+//        this.emailSecretRepository = emailSecretRepository;
+//    }
 
     /**
      * 이메일 암호 전송을 위한 무작위 문자열 생성 -> addSecretOnRedis
@@ -53,20 +53,18 @@ public class SecretUtil {
      * @param email
      * @param secret
      */
-    public void addSecretOnRedis(String email, String secret) {
+//    public void addSecretOnRedis(String email, String secret) {
+//
+//        if(emailSecretRepository.existsById(email)) emailSecretRepository.deleteById(email);
+//        emailSecretRepository.save(new EmailSecretEntity(email, secret));
+//    }
 
-        if(emailSecretRepository.existsById(email)) emailSecretRepository.deleteById(email);
-        emailSecretRepository.save(new EmailSecretEntity(email, secret));
-    }
-
-
-
-    public boolean checkSecret(String email, String secret) {
-
-        Optional<EmailSecretEntity> secretEntity = emailSecretRepository.findById(email);
-        String redisSecret = secretEntity.get().getSecret();
-        return secret.equals(redisSecret);
-    }
+//    public boolean checkSecret(String email, String secret) {
+//
+//        Optional<EmailSecretEntity> secretEntity = emailSecretRepository.findById(email);
+//        String redisSecret = secretEntity.get().getSecret();
+//        return secret.equals(redisSecret);
+//    }
 
 
     /**
@@ -74,10 +72,10 @@ public class SecretUtil {
      * @param email
      */
 
-    public void removeSecretOnRedis(String email) {
-
-        emailSecretRepository.deleteById(email);
-    }
+//    public void removeSecretOnRedis(String email) {
+//
+//        emailSecretRepository.deleteById(email);
+//    }
 
     /**
      * 무작위 문자열 value 를 암호화 : Cipher -> AES 사용

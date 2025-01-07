@@ -1,6 +1,6 @@
 package com.ssafy.springbootauth.dto;
 
-import com.ssafyhome.user.entity.UserEntity;
+import com.ssafy.springbootauth.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

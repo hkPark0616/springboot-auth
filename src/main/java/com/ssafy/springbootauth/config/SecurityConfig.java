@@ -1,7 +1,13 @@
 package com.ssafy.springbootauth.config;
 
+import com.ssafy.springbootauth.filter.CustomLoginFilter;
+import com.ssafy.springbootauth.filter.CustomLogoutFilter;
+import com.ssafy.springbootauth.handler.CustomOAuth2SuccessHandler;
+import com.ssafy.springbootauth.handler.PreAuthorizeExceptionHandler;
 import com.ssafy.springbootauth.repository.RefreshTokenRepository;
 import com.ssafy.springbootauth.repository.UserRepository;
+import com.ssafy.springbootauth.service.CustomUserDetailsService;
+import com.ssafy.springbootauth.service.JWTService;
 import com.ssafy.springbootauth.util.CookieUtil;
 import com.ssafy.springbootauth.util.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +22,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
@@ -26,33 +34,33 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final RefreshTokenRepository refreshTokenRepository;
-//    private final PreAuthorizeExceptionHandler preAuthorizeExceptionHandler;
+    private final PreAuthorizeExceptionHandler preAuthorizeExceptionHandler;
     private final UserRepository userRepository;
-//    private final JWTService jwtService;
+    private final JWTService jwtService;
     private final JWTUtil jwtUtil;
     private final CookieUtil cookieUtil;
-//    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
 
     public SecurityConfig(
             AuthenticationConfiguration authenticationConfiguration,
             RefreshTokenRepository refreshTokenRepository,
-//            PreAuthorizeExceptionHandler preAuthorizeExceptionHandler,
+            PreAuthorizeExceptionHandler preAuthorizeExceptionHandler,
             UserRepository userRepository,
-//            JWTService jwtService,
+            JWTService jwtService,
             JWTUtil jwtUtil,
-            CookieUtil cookieUtil
-//            CustomUserDetailsService userDetailsService
+            CookieUtil cookieUtil,
+            CustomUserDetailsService userDetailsService
     ) {
 
         this.authenticationConfiguration = authenticationConfiguration;
         this.refreshTokenRepository = refreshTokenRepository;
-//        this.preAuthorizeExceptionHandler = preAuthorizeExceptionHandler;
+        this.preAuthorizeExceptionHandler = preAuthorizeExceptionHandler;
         this.userRepository = userRepository;
-//        this.jwtService = jwtService;
+        this.jwtService = jwtService;
         this.jwtUtil = jwtUtil;
         this.cookieUtil = cookieUtil;
-//        this.userDetailsService = userDetailsService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -105,9 +113,9 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
+            HttpSecurity http,
 //            CustomOAuth2UserService customOAuth2UserService,
-//            CustomOAuth2SuccessHandler customOAuth2SuccessHandler,
+            CustomOAuth2SuccessHandler customOAuth2SuccessHandler
 //            CustomAuthorizationRequestRepository customAuthorizationRequestRepository
     ) throws Exception {
 
@@ -122,10 +130,10 @@ public class SecurityConfig {
         /**
          * 메서드 접근 불가시 종류에 따라서 custom bean에 따라 로직 수행
          */
-//        http.exceptionHandling((exceptionHandling) -> exceptionHandling
-//                .accessDeniedHandler(preAuthorizeExceptionHandler.customAccessDeniedHandler())
-//                .authenticationEntryPoint(preAuthorizeExceptionHandler.customAuthenticationEntryPoint())
-//        );
+        http.exceptionHandling((exceptionHandling) -> exceptionHandling
+                .accessDeniedHandler(preAuthorizeExceptionHandler.customAccessDeniedHandler())
+                .authenticationEntryPoint(preAuthorizeExceptionHandler.customAuthenticationEntryPoint())
+        );
 
         /**
          * cors권한 허용
@@ -137,26 +145,25 @@ public class SecurityConfig {
         /**
          * 로그인 filter custom
          */
-//        CustomLoginFilter customLoginFilter = new CustomLoginFilter(
-//                authenticationManager(authenticationConfiguration),
-//                jwtService,
-//                userMapper,
-//                cookieUtil
-//        );
-//
-//
-//        customLoginFilter.setFilterProcessesUrl("/auth/login");
-//        http.addFilterAt(customLoginFilter, UsernamePasswordAuthenticationFilter.class);
+        CustomLoginFilter customLoginFilter = new CustomLoginFilter(
+                authenticationManager(authenticationConfiguration),
+                jwtService,
+                userRepository,
+                cookieUtil
+        );
+
+        customLoginFilter.setFilterProcessesUrl("/auth/login");
+        http.addFilterAt(customLoginFilter, UsernamePasswordAuthenticationFilter.class);
 
         /**
          * 로그아웃 filter custom
          */
-//        CustomLogoutFilter customLogoutFilter = new CustomLogoutFilter(
-//                refreshTokenRepository,
-//                jwtService,
-//                cookieUtil
-//        );
-//        http.addFilterBefore(customLogoutFilter, LogoutFilter.class);
+        CustomLogoutFilter customLogoutFilter = new CustomLogoutFilter(
+                refreshTokenRepository,
+                jwtService,
+                cookieUtil
+        );
+        http.addFilterBefore(customLogoutFilter, LogoutFilter.class);
 
         /**
          * JWT가 유효한지 인증을 거치는 filter추가

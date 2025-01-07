@@ -1,5 +1,6 @@
 package com.ssafy.springbootauth.service;
 
+import com.ssafy.springbootauth.dto.JwtDto;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface JWTService {

@@ -83,7 +83,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// 기존 사용자 이메일 업데이트 및 필요시 다른 필드 업데이트
 			existUser.setUserEmail(oAuth2Response.getEmail());
 
-			userRepository.updateUserEmail(user.get().getUserSeq(), existUser.getUserEmail());
+			userRepository.updateUserEmail(userId, oAuth2Response.getEmail());
 //			userRepository.save(existUser);
 		}
 

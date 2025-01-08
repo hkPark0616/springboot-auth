@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> getUserByUserSeqAndUserEmail(Long userSeq, String email);
 
     // 2. ID 기반 유저 조회
-    Optional<UserEntity> getUserByUserId(String userSeq);
+    Optional<UserEntity> getUserByUserId(String userId);
 
 //    // 3. 이름과 이메일 기반 ID 조회 (JPQL 사용)
 //    @Query("SELECT u.userId FROM UserEntity u WHERE u.userName = :name AND u.userEmail = :email")
@@ -55,8 +55,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE UserEntity u SET u.userEmail = :email WHERE u.userSeq = :userSeq")
-    void updateUserEmail(@Param("userSeq") Long userSeq, @Param("email") String email);
+    @Query("UPDATE UserEntity u SET u.userEmail = :email WHERE u.userId = :userId")
+    void updateUserEmail(@Param("userId") String userId, @Param("email") String email);
 
 
     void deleteById(Long userSeq);

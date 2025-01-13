@@ -55,30 +55,30 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		// 기존 사용자 조회
 		Optional<UserEntity> user = userRepository.getUserByUserId(userId);
+		Optional<UserEntity> test = userRepository.getUserByUserId("string");
 		UserEntity existUser = new UserEntity();
 		// user가 존재하지 않으면 예외를 던짐
 //		UserEntity existUser = user.orElseThrow(() -> new IllegalArgumentException("User not found for userId: " + oAuth2Response.getName()));
 
-		if (user == null) {
+		if (!user.isPresent()) {
 			// 신규 사용자 생성
 			UserEntity userEntity = UserEntity.builder()
 					.userId(userId)
 					.userName(oAuth2Response.getName())
 					.userEmail(oAuth2Response.getEmail())
 					.socialPlatform(oAuth2Response.getProvider())
-					.socialType(oAuth2Response.getProvider())  // OAuth2 provider를 socialType으로 설정
-					.createdAt(LocalDateTime.now())  // createdAt 명시적으로 설정
 					.build();
 
 			try {
 				// 새로운 사용자 DB에 저장
 				userRepository.save(userEntity);
-				existUser = userEntity;
+//				existUser = userEntity;
 
 			} catch (Exception e) {
 				// 예외 처리 시 로그 추가
 				throw new SQLInsertException(e);
 			}
+			existUser = userEntity;
 		} else {
 			// 기존 사용자 이메일 업데이트 및 필요시 다른 필드 업데이트
 			existUser.setUserEmail(oAuth2Response.getEmail());

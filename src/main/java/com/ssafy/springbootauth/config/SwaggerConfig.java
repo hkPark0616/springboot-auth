@@ -28,10 +28,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Spring Security",
+                title = "Spring Security"
                         + "### 제공 API : \n\n"
                         + "1. 로그인 및 인증 관련 서비스 \n\n"
-
         ),
         security = @SecurityRequirement(name = "bearerAuth")
 )

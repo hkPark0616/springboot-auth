@@ -21,6 +21,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	private final UserRepository userRepository;
 	
 	public CustomOAuth2UserService(
+			UserRepository userRepository
 	) {
 		
 		this.userRepository = userRepository;
@@ -54,6 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		UserEntity existUser = new UserEntity();
 
 		if (!user.isPresent()) {
+
 			// 신규 사용자 생성
 			UserEntity userEntity = UserEntity.builder()
 					.userId(userId)
@@ -72,7 +74,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			}
 			existUser = userEntity;
 		} else {
+
 			existUser.setUserEmail(oAuth2Response.getEmail());
+			existUser.setUserId(userId);
+			existUser.setUserSeq(user.get().getUserSeq());
 			userRepository.updateUserEmail(userId, oAuth2Response.getEmail());
 		}
 

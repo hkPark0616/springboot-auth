@@ -97,7 +97,7 @@ public class SecurityConfig {
     private CorsConfiguration corsConfiguration(HttpServletRequest request) {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:9000", "http://localhost:9001"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:9000", "http://localhost:9001"));
         corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
         corsConfiguration.setAllowCredentials(true); // 쿠키 등의 자격증명 전송을 허용
         corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));

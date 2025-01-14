@@ -39,7 +39,6 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 		JwtDto jwtDto = jwtService.setTokens(userSeq, userEmail, "user");
 
 		response.addCookie(jwtDto.getRefreshToken());
-		response.sendRedirect("http://localhost:3000" + "?token=" + jwtDto.getAccessToken());
 	}
 
 }

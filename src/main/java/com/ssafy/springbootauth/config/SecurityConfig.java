@@ -73,7 +73,6 @@ public class SecurityConfig {
     }
 
     /**
-     * 비밀번호 등 암호화를 위한 빈 생성
      */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -124,15 +123,12 @@ public class SecurityConfig {
 
         /**
          * csrf, fromLogin, httpBasicLogin Disable
-         * Rest API의 경우 Stateless하고 JWT를 사용하므로 csrf공격이 유효하지 않으므로 disable
-         * Vue.js를 통한 FE에서 로그인 페이지를 별도로 구현하므로 기본 제공 로그인 방식을 막음
          */
         http.csrf(AbstractHttpConfigurer::disable); // 사용자 요청 위조 (Cross Site Request Forgery)
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         /**
-         * 메서드 접근 불가시 종류에 따라서 custom bean에 따라 Exception 로직 수행
          */
         http.exceptionHandling((exceptionHandling) -> exceptionHandling
                 .accessDeniedHandler(preAuthorizeExceptionHandler.customAccessDeniedHandler())

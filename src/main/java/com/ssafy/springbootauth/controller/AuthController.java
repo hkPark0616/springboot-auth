@@ -34,9 +34,6 @@ public class AuthController {
         this.cookieUtil = cookieUtil;
     }
 
-
-
-
     @Operation(
             summary = "Refresh Token 재발급",
             description = "### 사용자의 refreshToken 을 활용해 accessToken을 재발급합니다. \n\n"

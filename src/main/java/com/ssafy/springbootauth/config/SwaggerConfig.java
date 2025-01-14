@@ -29,8 +29,6 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Spring Security",
-                description = "# Spring Security APIs \n\n"
-                        + "## Spring Security 연습 api sample 입니다. \n\n"
                         + "### 제공 API : \n\n"
                         + "1. 로그인 및 인증 관련 서비스 \n\n"
 

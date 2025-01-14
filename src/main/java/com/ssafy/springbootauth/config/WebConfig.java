@@ -18,12 +18,10 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * FE와 통신시 Cors정책 허용
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000");
     }
 }

@@ -19,15 +19,11 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder passwordEncoder;
 	
 	public CustomOAuth2UserService(
-			UserRepository userRepository,
-			BCryptPasswordEncoder passwordEncoder
 	) {
 		
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -55,10 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		// 기존 사용자 조회
 		Optional<UserEntity> user = userRepository.getUserByUserId(userId);
-		Optional<UserEntity> test = userRepository.getUserByUserId("string");
 		UserEntity existUser = new UserEntity();
-		// user가 존재하지 않으면 예외를 던짐
-//		UserEntity existUser = user.orElseThrow(() -> new IllegalArgumentException("User not found for userId: " + oAuth2Response.getName()));
 
 		if (!user.isPresent()) {
 			// 신규 사용자 생성
@@ -72,7 +65,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			try {
 				// 새로운 사용자 DB에 저장
 				userRepository.save(userEntity);
-//				existUser = userEntity;
 
 			} catch (Exception e) {
 				// 예외 처리 시 로그 추가
@@ -80,24 +72,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			}
 			existUser = userEntity;
 		} else {
-			// 기존 사용자 이메일 업데이트 및 필요시 다른 필드 업데이트
 			existUser.setUserEmail(oAuth2Response.getEmail());
-
 			userRepository.updateUserEmail(userId, oAuth2Response.getEmail());
-//			userRepository.save(existUser);
 		}
-
-//		UserEntity userEntity = UserEntity.builder()
-//				.userId(existUser.getUserId())
-//				.userEmail(existUser.getUserEmail())
-//				.userName(existUser.getUserName())
-//				.socialType(existUser.getSocialType())
-//				.socialPlatform(existUser.getSocialPlatform())
-//				.createdAt(existUser.getCreatedAt() != null ? existUser.getCreatedAt() : LocalDateTime.now()) // null일 경우 현재 시간 설정
-//				.build();
 
 		return new CustomOAuth2User(existUser);
 	}
-
 
 }
